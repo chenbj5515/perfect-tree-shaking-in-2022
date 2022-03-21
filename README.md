@@ -196,10 +196,17 @@ generateTheme代码比较复杂，我只梳理了大致脉络是读取antdStyles
 ```
 另外，插件的示例代码中，还会用读取less变量的方法getLessVars做下面这些事：
 1. 读取antd/lib/style/themes/dark.less文件，生成dark.json文件，并且最终会以对象的形式作为less.modifyVars的参数，来修改主题为暗色
-2. 读取aantd/lib/style/themes/compact.less文件生成light.json文件，作为亮色主题的对象。
+2. 读取antd/lib/style/themes/compact.less文件生成light.json文件，作为亮色主题的对象。
 
+至此，完整的流程就分析完毕了，我们总结下：
+1. 在antd-theme-generator插件中，读取component.less和global.less文件，确立组件标签和全局标签的主题样式的属性和less变量的映射关系。
+2. 在webpack.config.js中定义传入插件的less变量，确立了less变量和决定主题的色值等样式值的关系。注意，只有这里定义的less变量，才会被color.less使用，否则color.less中样式的值就不是变量而是固定值。这意味着如果你要某些变量可变，就要在这里定义好。
+3. 把前两者合并成一个color.less资源。把color.less的引入标签link和less.min.js的引入标签script插入html。
+4. less.min.js转换less资源为css，并以style标签的形式插入html，完成样式表的应用。
+5. 切换暗色时，调用less.modifyVars方法，传入之前转化为dark.json的/antd/lib/style/themes/dark.less变量集，完成新css的生成以及style标签的更新。
+6. 切换亮色时，官方示例是传入antd/lib/style/themes/compact.less转化的light.json变量集，不过这里个人觉得用theme.json变量集合更好一些。
 
-
+自己写一个极简版的webpack插件
 
 
 

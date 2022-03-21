@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button, DatePicker, Switch} from 'antd';
 import darkVars from './dark.json';
+import themeVars from './theme.json';
 import lightVars from './light.json';
 import 'antd/es/button/style';
 import 'antd/es/date-picker/style';
@@ -13,7 +14,7 @@ function onChange(checked: boolean) {
         //     '@primary-color': 'black'
         // });
         // @ts-ignore
-        window.less.modifyVars(lightVars);
+        window.less.modifyVars(themeVars);
         return;
     }
     // @ts-ignore
