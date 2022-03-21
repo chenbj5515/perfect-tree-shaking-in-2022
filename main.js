@@ -1,15 +1,13 @@
-/*! For license information please see main.7edf350e.js.LICENSE.txt */
+/*! For license information please see main.b7c9ab33.js.LICENSE.txt */
 "use strict";
 (self.webpackChunkshaking_myself = self.webpackChunkshaking_myself || []).push([
   ["main"],
   {
-    "./src/child.ts": (e, s, r) => {
-      r.d(s, { func0: () => c });
-      const c = () => 0;
-    },
-    "./src/index.ts": (e, s, r) => {
-      var c = r("./src/child.ts");
-      console.log((0, c.func0)(), "foo===");
+    "./src/index.ts": (e, s, o) => {
+      var r = o(
+        "./node_modules/.pnpm/registry.npmmirror.com+lodash@4.17.21/node_modules/lodash/lodash.js"
+      );
+      console.log((0, r.isEmpty)({}));
     },
   },
   (e) => {
@@ -17,7 +15,7 @@
     e.O(
       0,
       [
-        "vendors-node_modules_pnpm_registry_npmmirror_com_webpack-dev-server_4_7_4_webpack-cli_4_9_2_w-31b0ca",
+        "vendors-node_modules_pnpm_registry_npmmirror_com_lodash_4_17_21_node_modules_lodash_lodash_js-457098",
       ],
       () => (
         s(
