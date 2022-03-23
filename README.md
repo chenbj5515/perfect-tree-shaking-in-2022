@@ -150,7 +150,7 @@ e("be retained");
 ```
 可以看到，后面标记为纯函数的才被tree-shaking掉了，而前面的即是实际是纯函数，也没有被优化掉。<br>
 这是因为，webpack默认就不会优化函数调用。也就说，即是真的是纯函数，即是调用了对其他任何地方都完全没有任何影响也会保留。这是一个谨慎的机制，但这样可以避免出现意料之外的case导致没有分析出非纯函数导致运行时结果与预期不符。<br>
-当然，如果你给了webpack保障，承诺这一定是一个无副作用的函数调用，那么webpack才会开始分析这个调用是否对其他地方有影响。比如这里/*#__PURE__*/foo('be removed');显然就是单纯调用，不会有任何影响，于是就被tree-shaking掉了。<br>
+当然，如果你给了webpack保障，承诺这一定是一个无副作用的函数调用，那么webpack才会开始分析这个调用是否对其他地方有影响。比如这里`/*#__PURE__*/foo('be removed');`显然就是单纯调用，不会有任何影响，于是就被tree-shaking掉了。<br>
 
 #### 不要让babel转译你的ESM格式代码
 babel是大家的老朋友的，绝大多数项目都会用babel完成一些代码转译的工作。<br>
@@ -183,9 +183,9 @@ optimization: {
     ]
 }
 ```
-另外要注意两点：
-a. 如果你在写一个npm包，并且确定一个函数的调用是无副作用的，那么应该用/*#__PURE__*/对函数调用进行标记，这样你的用户在引用你的npm包时就可以tree-shaking掉你的函数和函数调用相关代码了。
-b. 不要配置@babel/preset-env的modules这个配置项。
+另外要注意两点：<br>
+a. 如果你在写一个npm包，并且确定一个函数的调用是无副作用的，那么应该用`/*#__PURE__*/`对函数调用进行标记，这样你的用户在引用你的npm包时就可以tree-shaking掉你的函数和函数调用相关代码了。<br>
+b. 不要配置@babel/preset-env的modules这个配置项。<br>
 2. js库的tree-shaking通常是依赖发布者提供esm格式，这样就可以按需引入，也就不需要tree-shaking了。
 3. css的tree-shaking，如果库提供了单独的css文件，那么也可以按需引入。不过更常见的解决方案是全量引入后，用postcss+postcss的purgecss插件完成js和html中未引用样式的tree-shaking。
 
