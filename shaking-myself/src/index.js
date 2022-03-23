@@ -10,6 +10,6 @@ foo('be retained');
 
 /*#__PURE__*/foo('be removed');
 
-func0();
+// func0();
 // const menu = new Menu();
 const a = 1;

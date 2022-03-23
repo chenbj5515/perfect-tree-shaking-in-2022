@@ -130,3 +130,62 @@ module.exports = {
 
 ### tree-shaking的技巧和注意事项
 #### 用纯函数标记来增强tree-shaking
+在源码中，你经常能看见/*#__PURE__*/标注一个函数的调用，这其实就会增强tree-shaking功能。<br>
+我们看这个例子：
+```
+function foo(info) {
+    return info + '';
+}
+
+foo('be retained');
+
+/*#__PURE__*/foo('be removed');
+```
+处理后的代码片段为：
+```
+function e(e) {
+  return e + "";
+}
+e("be retained");
+```
+可以看到，后面标记为纯函数的才被tree-shaking掉了，而前面的即是实际是纯函数，也没有被优化掉。<br>
+这是因为，webpack默认就不会优化函数调用。也就说，即是真的是纯函数，即是调用了对其他任何地方都完全没有任何影响也会保留。这是一个谨慎的机制，但这样可以避免出现意料之外的case导致没有分析出非纯函数导致运行时结果与预期不符。<br>
+当然，如果你给了webpack保障，承诺这一定是一个无副作用的函数调用，那么webpack才会开始分析这个调用是否对其他地方有影响。比如这里/*#__PURE__*/foo('be removed');显然就是单纯调用，不会有任何影响，于是就被tree-shaking掉了。<br>
+
+#### 不要让babel转译你的ESM格式代码
+babel是大家的老朋友的，绝大多数项目都会用babel完成一些代码转译的工作。<br>
+而babel有一个常用插件@babel/preset-env，它有一个配置项modules可以指定把js文件的导入导出格式进行转译:
+"amd" | "umd" | "systemjs" | "commonjs" | "cjs" | "auto" | false, defaults to "auto".<br>
+根据官方文档：https://babeljs.io/docs/en/babel-preset-env，可以看到有以上那么多的格式可供选择。<br>
+需要注意的是，这里一定不要设置auto也就是默认值以外的其他任何值。<br>
+因为只有esm格式才能进行模块的静态分析，进而tree-shaking掉未被使用的模块变量。至于其他格式为什么不行呢？
+就以大家熟悉cjs来说吧，cjs实际上会把所有的模块变量都放到一个模块对象上去，然后是整体引入这个对象，既然是整体导入的，当然是不可能进行tree-shaking了。<br>
+这里再多一嘴，可能有人疑惑不转化esm的话会不会有问题。实际上，前面webpack都说了可以静态分析esm格式的代码，webpack不需要babel进行转译，它能处理任何格式的代码，最终都统一转化为cjs like的mock function格式：
+```
+"./src/child.js": (e, r, s) => {},
+"./src/index.js": (e, r, s) => {
+  s("./src/child.js");
+  function n(e) {
+    return e + "";
+  }
+  n("be retained");
+},
+```
+
+### tree-shaking的总结
+1. 开发者自己的无效代码，比如定义但未被引用过的模块变量、定义但未被读取的普通变量等，需要通过这些配置完成tree-shaking:
+```
+optimization: {
+    usedExports: true,
+    minimize: true,
+    minimizer: [
+        new TerserWebpackPlugin()
+    ]
+}
+```
+另外要注意两点：
+a. 如果你在写一个npm包，并且确定一个函数的调用是无副作用的，那么应该用/*#__PURE__*/对函数调用进行标记，这样你的用户在引用你的npm包时就可以tree-shaking掉你的函数和函数调用相关代码了。
+b. 不要配置@babel/preset-env的modules这个配置项。
+2. js库的tree-shaking通常是依赖发布者提供esm格式，这样就可以按需引入，也就不需要tree-shaking了。
+3. css的tree-shaking，如果库提供了单独的css文件，那么也可以按需引入。不过更常见的解决方案是全量引入后，用postcss+postcss的purgecss插件完成js和html中未引用样式的tree-shaking。
+
