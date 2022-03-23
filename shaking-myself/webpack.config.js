@@ -7,7 +7,7 @@ module.exports = function(_env, argv) {
   const isDevelopment = !isProduction;
   return {
     devtool: isDevelopment && "cheap-module-source-map",
-    entry: "./src/index.ts",
+    entry: "./src/index.js",
     output: {
       path: path.resolve(__dirname, "dist"),
       filename: "assets/js/[name].[contenthash:8].js",
@@ -16,7 +16,7 @@ module.exports = function(_env, argv) {
     module: {
       rules: [
         {
-          test: /\.ts?$/,
+          test: /\.js?$/,
           exclude: /node_modules/,
           use: {
             loader: "babel-loader",
