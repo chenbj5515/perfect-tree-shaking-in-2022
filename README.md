@@ -186,6 +186,7 @@ optimization: {
 另外要注意两点：
 a. 如果你在写一个npm包，并且确定一个函数的调用是无副作用的，那么应该用/*#__PURE__*/对函数调用进行标记，这样你的用户在引用你的npm包时就可以tree-shaking掉你的函数和函数调用相关代码了。
 b. 不要配置@babel/preset-env的modules这个配置项。
+
 2. js库的tree-shaking通常是依赖发布者提供esm格式，这样就可以按需引入，也就不需要tree-shaking了。
 3. css的tree-shaking，如果库提供了单独的css文件，那么也可以按需引入。不过更常见的解决方案是全量引入后，用postcss+postcss的purgecss插件完成js和html中未引用样式的tree-shaking。
 
