@@ -126,3 +126,7 @@ module.exports = {
 ```
 具体效果来看，之前的antd.min.css是540.85KB，tree-shaking后是302.99KB，体积优化了56%，还是可以的。<br>
 另外这种tree-shaking和动态主题也是兼容的，在/css-treeshaking这个目录下可以跑起来demo。
+
+
+### tree-shaking的技巧和注意事项
+#### 用纯函数标记来增强tree-shaking
