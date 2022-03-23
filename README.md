@@ -156,7 +156,8 @@ e("be retained");
 babel是大家的老朋友的，绝大多数项目都会用babel完成一些代码转译的工作。<br>
 而babel有一个常用插件@babel/preset-env，它有一个配置项modules可以指定把js文件的导入导出格式进行转译:
 "amd" | "umd" | "systemjs" | "commonjs" | "cjs" | "auto" | false, defaults to "auto".<br>
-根据官方文档：https://babeljs.io/docs/en/babel-preset-env，可以看到有以上那么多的格式可供选择。<br>
+根据官方文档：https://babeljs.io/docs/en/babel-preset-env
+可以看到有以上那么多的格式可供选择。<br>
 需要注意的是，这里一定不要设置auto也就是默认值以外的其他任何值。<br>
 因为只有esm格式才能进行模块的静态分析，进而tree-shaking掉未被使用的模块变量。至于其他格式为什么不行呢？
 就以大家熟悉cjs来说吧，cjs实际上会把所有的模块变量都放到一个模块对象上去，然后是整体引入这个对象，既然是整体导入的，当然是不可能进行tree-shaking了。<br>
