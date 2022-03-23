@@ -96,9 +96,9 @@ export { default as isEmpty } from './isEmpty.js';
 先澄清下，亮暗切换和动态主题并不是一回事。动态主题在antd官网有一个单独的tab来介绍，它可以用来给antd换一套主题色甚至动态改变主题色。这个功能是相当灵活的，你可以把原本蓝色的主题修改为任意颜色的主题。这意味着你需要指定一套新的主题。而暗色模式相当于是另一套主题，无需你或者你的设计伙伴设计颜色（除非你对antd默认的暗色模式不满意）。<br>
 其实，亮暗切换就是antd默认主题<->antd暗色主题的过程。我们需要探讨下实现原理以及这种情况下是否还可以按需引入css<br>
 我们直接说答案，能。是的，使用antd-theme-webpack-plugin插件，你完全可以既按需引入又实现动态主题。<br>
-但相关讨论和本文相关性不高，所以如想看，可以移步这里：https://chenbj5515.notion.site/Antd-28ec0ce2076f41809c5481ca1bade2cf。<br>
-当然，严格来说按需引入css其实不算tree-shaking，而是一开始就没引入，何谈的tree-shaking呢？<br>
-实际上，更常用的方案是，全量引入后tree-shaking掉没有被js和html中用到的样式。<br>
+但相关讨论和本文相关性不高，所以如想看，可以移步这里：https://chenbj5515.notion.site/Antd-28ec0ce2076f41809c5481ca1bade2cf<br>
+当然，严格来说按需引入css其实不算tree-shaking。一开始就没引入，何谈的tree-shaking呢？<br>
+实际上，更常用的方案是，全量引入css后tree-shaking掉没有被js和html中用到的样式。<br>
 2022这个时间节点，实现这个功能最主流的方式是用postcss+postcss的插件postcss-purgecss。<br>
 1. 首先确保用了postcss，在webpack项目中的话，只要对css文件配置了postcss-loader的话就是用了
 2. 在postcss.config.js中plugins数组中追加postcss-purgecss插件即可：
