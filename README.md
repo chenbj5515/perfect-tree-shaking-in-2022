@@ -153,7 +153,7 @@ e("be retained");
 当然，如果你给了webpack保障，承诺这一定是一个无副作用的函数调用，那么webpack才会开始分析这个调用是否对其他地方有影响。比如这里`/*#__PURE__*/foo('be removed');`显然就是单纯调用，不会有任何影响，于是就被tree-shaking掉了。<br>
 
 #### 不要让babel转译你的ESM格式代码
-babel是大家的老朋友的，绝大多数项目都会用babel完成一些代码转译的工作。<br>
+babel是大家的老朋友了，绝大多数项目都会用babel完成一些代码转译的工作。<br>
 而babel有一个常用插件@babel/preset-env，它有一个配置项modules可以指定把js文件的导入导出格式进行转译:
 "amd" | "umd" | "systemjs" | "commonjs" | "cjs" | "auto" | false, defaults to "auto".<br>
 根据官方文档：https://babeljs.io/docs/en/babel-preset-env
