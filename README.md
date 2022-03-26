@@ -55,7 +55,10 @@ func1();
 },
 ```
 结果看起来非常完美，副作用log 1被提取出来并执行了，而包含副作用的函数的定义代码由于没有被其他模块调用所以完全被shake掉了。竟然能提取副作用，这个shaking效果是超出预期的。<br>
-再继续探究下这个context下的shaking行为，发现被外部引用并调用的话就一定不会被shaking掉了，即使是纯函数，你可以自己在/shaking-myself/src目录下自行修改实验，之后即可pnpm run start，在开发者工具的Sources Tab中拿到转译后的main.js代码以查阅shaking结果。
+再继续探究下这个context下的shaking行为，准确地说shaking分为两种情况，变量定义代码的shaking和读变量/函数调用代码的shaking。<br>
+变量定义代码是否会被shaking，唯一看的就是导出的变量是否有被其他模块引用，有的话就会被shaking掉，没有的话就不会。<br>
+而读取变量/函数调用的代码是否会被shaking，唯一看的就是读取变量/函数调用是否产生了作用，必须只是一个读取操作没有其他的，那很明显不会产生任何副作用，就会直接shaking掉。而函数调用，一定不会被shaking掉，即使函数是纯函数也不会，你必须手动用`/*#__PURE__*/`标记这次函数调用是无副作用的才会被shaking掉。这一点在最后一节也会再次说明。<br>
+你可以自己在/shaking-myself/src目录下自行修改实验，之后即可pnpm run start，在开发者工具的Sources Tab中拿到转译后的main.js代码以查阅shaking结果。
 
 ### shaking依赖中的dead code
 虽然可以通过以上配置较完美地shaking开发者自己代码，但shaking自己其实作用通常不大，一方面大多数项目开发者自己代码占比很小。另一方面，如果开发流程足够规范，开发者自己项目的代码基本不会有dead code。<br>

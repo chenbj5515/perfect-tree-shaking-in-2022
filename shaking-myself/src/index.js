@@ -1,15 +1,17 @@
 import Menu, {func0} from './child';
 
-// console.log(func0(), 'foo===');
+func0();
 
-function foo(info) {
-    return info + '';
-}
+// /*#__PURE__*/func0();
 
-foo('be retained');
+// function foo(info) {
+//     return info + '';
+// }
 
-/*#__PURE__*/foo('be removed');
+// foo('be retained');
+
+// /*#__PURE__*/foo('be removed');
 
 // func0();
 // const menu = new Menu();
-const a = 1;
+// const a = 1;
